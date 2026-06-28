@@ -28,7 +28,11 @@ export default function Testimonials() {
   const prev = () => setI((v) => (v - 1 + REVIEWS.length) % REVIEWS.length)
 
   useEffect(() => {
-    const t = setInterval(next, 7000)
+    // Respect user preference for reduced motion
+    const mql = window.matchMedia?.('(prefers-reduced-motion: reduce)')
+    if (mql?.matches) return
+
+    const t = setInterval(next, 3500)
     return () => clearInterval(t)
   }, [])
 
