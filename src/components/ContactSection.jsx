@@ -8,22 +8,22 @@ export default function ContactSection({ onQuote }) {
   return (
     <section id="contact" className="py-16 lg:py-24 bg-white border-b border-zinc-200">
       <div ref={ref} className="max-w-7xl mx-auto px-5 lg:px-8">
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-          
+
           {/* Left Column: Contact details (matches Unified) */}
           <div className="reveal space-y-6">
             <span className="text-gold tracking-[0.2em] text-xs font-bold uppercase block">
-              Contact
+              GET IN TOUCH
             </span>
             <h2 className="font-display font-bold text-3xl text-navy">
-              Feel free To Contact
+              Request a Consultation
             </h2>
             <div className="w-12 h-1 bg-gold rounded-full my-3" />
             <p className="text-zinc-600 text-sm sm:text-base leading-relaxed">
-              Kalyan Elevators is the premier elevator manufacturer in Kerala. Our dedicated team will help elevate your world!
+              Partner with Kerala’s trusted name in vertical mobility. Reach out to our technical team today to discuss your project requirements, schedule a site inspection, or request a custom quote.
             </p>
-            
+
             <ul className="space-y-4 pt-4 border-t border-zinc-100">
               <li className="flex items-center gap-4 text-zinc-700">
                 <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center text-gold shrink-0">
@@ -76,7 +76,7 @@ export default function ContactSection({ onQuote }) {
               <h3 className="font-display font-semibold text-lg text-navy tracking-wide">
                 Send a General Inquiry
               </h3>
-              
+
               <div className="space-y-3">
                 <input
                   required

@@ -22,14 +22,18 @@ export default function Navbar({ onQuote }) {
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${scrolled
           ? 'bg-white shadow-md border-b border-zinc-100'
           : 'bg-white/95 lg:bg-white/90 backdrop-blur-sm border-b border-zinc-100'
-      }`}
+        }`}
     >
       <nav className="max-w-7xl mx-auto px-5 lg:px-8 h-16 lg:h-20 flex items-center justify-between">
-        <a href="#home" className="flex items-baseline gap-1 select-none">
+        <a href="#home" className="flex items-center gap-2 select-none">
+          <img
+            src="/logoo.jpeg"
+            alt="Kalyan Elevators"
+            className="w-9 h-9 rounded-full object-cover ring-1 ring-gold/40"
+          />
           <span className="font-display text-xl lg:text-2xl font-bold tracking-wider text-navy">
             {BRAND.shortName}
           </span>

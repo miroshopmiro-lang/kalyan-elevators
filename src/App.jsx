@@ -5,6 +5,7 @@ import AboutSection from './components/AboutSection'
 import ProductsServices from './components/ProductsServices'
 import ProductRange from './components/ProductRange'
 import Testimonials from './components/Testimonials'
+import InstallationsInMotion from './components/InstallationsInMotion'
 import ContactSection from './components/ContactSection'
 import Footer from './components/Footer'
 import StickyDock from './components/StickyDock'
@@ -24,6 +25,7 @@ export default function App() {
         <ProductsServices />
         <ProductRange onQuote={openQuote} />
         <Testimonials />
+        <InstallationsInMotion />
         <ContactSection onQuote={openQuote} />
       </main>
       <Footer />

@@ -7,6 +7,11 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-5 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-10">
         <div>
           <div className="flex items-baseline gap-1">
+            <img
+              src="/logoo.jpeg"
+              alt="Kalyan Elevators"
+              className="w-9 h-9 rounded-full object-cover ring-1 ring-gold/40"
+            />
             <span className="font-display text-xl font-bold tracking-wider text-white">
               {BRAND.shortName}
             </span>
