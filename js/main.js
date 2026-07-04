@@ -36,6 +36,7 @@
             '<div class="menu-main">' +
               '<a href="index.html">Home</a>' +
               '<a href="about.html">About</a>' +
+              '<a href="gallery.html">Gallery</a>' +
               '<a href="contact.html">Contact</a>' +
             '</div>' +
           '</div>' +
@@ -61,6 +62,7 @@
             '<div><h4>Quick Links</h4><ul>' +
               '<li><a href="index.html">Home</a></li>' +
               '<li><a href="about.html">About</a></li>' +
+              '<li><a href="gallery.html">Gallery</a></li>' +
               '<li><a href="contact.html">Contact</a></li>' +
               productLinks +
             '</ul></div>' +
@@ -310,5 +312,18 @@
     setTimeout(function () {
       document.body.classList.add('loaded');
     }, 50);
+
+    /* ---- Service Worker registration ---- */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          .then(function (reg) {
+            console.log('[SW] Registered, scope:', reg.scope);
+          })
+          .catch(function (err) {
+            console.warn('[SW] Registration failed:', err);
+          });
+      });
+    }
   });
 })();
