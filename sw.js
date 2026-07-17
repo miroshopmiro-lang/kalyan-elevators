@@ -12,7 +12,7 @@
      The activate event auto-deletes all old versioned caches.
    ============================================================ */
 
-const CACHE_VERSION = 'v1.0.0';
+const CACHE_VERSION = 'v1.0.1';
 const STATIC_CACHE  = `kalyan-static-${CACHE_VERSION}`;
 const PAGES_CACHE   = `kalyan-pages-${CACHE_VERSION}`;
 
@@ -34,8 +34,8 @@ const PRECACHE_ASSETS = [
   '/freight-elevators.html',
   '/goods-elevators.html',
   '/structural-elevators.html',
-  '/css/style.css',
-  '/js/main.js',
+  '/css/style.css?v=1.0.1',
+  '/js/main.js?v=1.0.1',
   '/favicon.png',
   '/logo.png',
   '/core-tech-bg.webp',
