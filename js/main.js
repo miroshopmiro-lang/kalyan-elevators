@@ -2,6 +2,8 @@
 (function () {
   'use strict';
 
+  document.documentElement.classList.add('js');
+
   var PRODUCTS = [
     ['passenger-elevators.html', 'Passenger Elevators'],
     ['home-elevators.html', 'Home Elevators'],
@@ -135,6 +137,11 @@
   }
 
   function initReveals() {
+    var els = document.querySelectorAll('.reveal, .img-reveal, .split-lines');
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (e.isIntersecting) {
@@ -143,9 +150,17 @@
         }
       });
     }, { threshold: 0.15 });
-    document.querySelectorAll('.reveal, .img-reveal, .split-lines').forEach(function (el) {
+    els.forEach(function (el) {
       io.observe(el);
     });
+    /* Failsafe: if IO never fires for anything (broken in some environments),
+       reveal everything so content is never stuck hidden. */
+    setTimeout(function () {
+      if (!document.querySelector('.reveal.in, .img-reveal.in, .split-lines.in')) {
+        io.disconnect();
+        els.forEach(function (el) { el.classList.add('in'); });
+      }
+    }, 900);
   }
 
   function initCounters() {

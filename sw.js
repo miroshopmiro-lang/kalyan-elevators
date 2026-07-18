@@ -12,9 +12,9 @@
      The activate event auto-deletes all old versioned caches.
    ============================================================ */
 
-const CACHE_VERSION = 'v1.0.1';
-const STATIC_CACHE  = `kalyan-static-${CACHE_VERSION}`;
-const PAGES_CACHE   = `kalyan-pages-${CACHE_VERSION}`;
+const CACHE_VERSION = 'v1.0.8';
+const STATIC_CACHE = `kalyan-static-${CACHE_VERSION}`;
+const PAGES_CACHE = `kalyan-pages-${CACHE_VERSION}`;
 
 /* ---- Assets to pre-cache on install ---- */
 const PRECACHE_ASSETS = [
@@ -34,8 +34,8 @@ const PRECACHE_ASSETS = [
   '/freight-elevators.html',
   '/goods-elevators.html',
   '/structural-elevators.html',
-  '/css/style.css?v=1.0.1',
-  '/js/main.js?v=1.0.1',
+  '/css/style.css?v=1.0.6',
+  '/js/main.js?v=1.0.4',
   '/favicon.png',
   '/logo.png',
   '/core-tech-bg.webp',
@@ -59,9 +59,7 @@ const PRECACHE_ASSETS = [
   '/images/passenger-gallery-3.webp',
   '/images/home-elevator-hero.webp',
   '/images/home-elevator-cta.webp',
-  '/images/home-elevator-gallery-1.webp',
   '/images/home-elevator-gallery-2.webp',
-  '/images/home-elevator-gallery-3.webp',
   '/images/glass-hero.webp',
   '/images/glass-cta.webp',
   '/images/glass-gallery-1.webp',
@@ -81,7 +79,7 @@ const PRECACHE_ASSETS = [
   '/images/hospital-cta.webp',
   '/images/hospital-gallery-1.webp',
   '/images/hospital-gallery-2.webp',
-  '/images/hospital-gallery-3.webp',
+  '/images/hospital-gallery-3.png',
   '/images/car-hero.webp',
   '/images/car-cta.webp',
   '/images/car-gallery-1.webp',
