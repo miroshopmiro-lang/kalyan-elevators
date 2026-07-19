@@ -12,7 +12,7 @@
      The activate event auto-deletes all old versioned caches.
    ============================================================ */
 
-const CACHE_VERSION = 'v1.0.8';
+const CACHE_VERSION = 'v1.1.0';
 const STATIC_CACHE = `kalyan-static-${CACHE_VERSION}`;
 const PAGES_CACHE = `kalyan-pages-${CACHE_VERSION}`;
 
@@ -32,7 +32,6 @@ const PRECACHE_ASSETS = [
   '/hospital-elevators.html',
   '/car-elevators.html',
   '/freight-elevators.html',
-  '/goods-elevators.html',
   '/structural-elevators.html',
   '/css/style.css?v=1.0.6',
   '/js/main.js?v=1.0.4',
@@ -79,7 +78,7 @@ const PRECACHE_ASSETS = [
   '/images/hospital-cta.webp',
   '/images/hospital-gallery-1.webp',
   '/images/hospital-gallery-2.webp',
-  '/images/hospital-gallery-3.png',
+  '/images/hospital-gallery-3.webp',
   '/images/car-hero.webp',
   '/images/car-cta.webp',
   '/images/car-gallery-1.webp',
@@ -90,11 +89,6 @@ const PRECACHE_ASSETS = [
   '/images/freight-gallery-1.webp',
   '/images/freight-gallery-2.webp',
   '/images/freight-gallery-3.webp',
-  '/images/goods-hero.webp',
-  '/images/goods-cta.webp',
-  '/images/goods-gallery-1.webp',
-  '/images/goods-gallery-2.webp',
-  '/images/goods-gallery-3.webp',
   '/images/structural-hero.webp',
   '/images/structural-cta.webp',
   '/images/structural-gallery-1.webp',

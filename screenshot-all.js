@@ -12,7 +12,6 @@ const PAGES = [
   { file: 'hospital-elevators.html', folder: 'Fable-build-hospital-elevators', name: 'hospital_elevators' },
   { file: 'car-elevators.html', folder: 'Fable-build-car-elevators', name: 'car_elevators' },
   { file: 'freight-elevators.html', folder: 'Fable-build-freight-elevators', name: 'freight_elevators' },
-  { file: 'goods-elevators.html', folder: 'Fable-build-goods-elevators', name: 'goods_elevators' },
   { file: 'structural-elevators.html', folder: 'Fable-build-structural-elevators', name: 'structural_elevators' }
 ];
 

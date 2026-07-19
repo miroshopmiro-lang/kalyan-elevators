@@ -13,7 +13,6 @@
     ['hospital-elevators.html', 'Hospital Elevators'],
     ['car-elevators.html', 'Car Elevators'],
     ['freight-elevators.html', 'Freight Elevators'],
-    ['goods-elevators.html', 'Goods Elevators'],
     ['structural-elevators.html', 'Structural Elevators']
   ];
 
