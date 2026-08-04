@@ -1,106 +1,24 @@
-/* Kalyan Elevators — shared layout + motion system */
+/* ============================================================
+   KALYAN ELEVATORS — behaviour layer
+   ------------------------------------------------------------
+   This file no longer renders the header, menu, footer or the
+   product cross-link strips. Those are baked into every page as
+   real HTML by build/build-layout.js, so navigation survives a
+   failed, blocked or stale script. Run that build after editing
+   build/site-data.js.
+
+   Nothing here is required for the page to be readable. Every
+   enhancement below degrades to a visible, usable page.
+   ============================================================ */
 (function () {
   'use strict';
 
   document.documentElement.classList.add('js');
 
-  var PRODUCTS = [
-    ['passenger-elevators.html', 'Passenger Elevators'],
-    ['home-elevators.html', 'Home Elevators'],
-    ['glass-elevators.html', 'Glass Elevators'],
-    ['capsule-elevators.html', 'Capsule Elevators'],
-    ['commercial-elevators.html', 'Commercial Elevators'],
-    ['hospital-elevators.html', 'Hospital Elevators'],
-    ['car-elevators.html', 'Car Elevators'],
-    ['freight-elevators.html', 'Freight Elevators'],
-    ['structural-elevators.html', 'Structural Elevators']
-  ];
+  var reduceMotion = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function headerHTML() {
-    var productLinks = PRODUCTS.map(function (p) {
-      return '<a href="' + p[0] + '">' + p[1] + '</a>';
-    }).join('');
-    return '' +
-      '<header class="site-header" id="siteHeader">' +
-        '<div class="header-inner">' +
-          '<button class="burger" id="menuToggle" aria-label="Menu"><span><i></i><i></i></span></button>' +
-          '<a class="brand" href="index.html"><img src="logo.png" alt="Kalyan Elevators"></a>' +
-          '<div class="header-actions">' +
-            '<a class="phone-pill" href="tel:+917994998880">+91 79949 98880</a>' +
-            '<a class="btn btn-gold btn-quote" href="contact.html"><span>Get a Quote</span></a>' +
-          '</div>' +
-        '</div>' +
-      '</header>' +
-      '<nav class="menu-overlay" id="menuOverlay" aria-label="Main navigation">' +
-        '<div class="menu-inner">' +
-          '<div class="menu-col"><span class="mono-label">Navigate</span>' +
-            '<div class="menu-main">' +
-              '<a href="index.html">Home</a>' +
-              '<a href="about.html">About</a>' +
-              '<a href="gallery.html">Gallery</a>' +
-              '<a href="contact.html">Contact</a>' +
-            '</div>' +
-          '</div>' +
-          '<div class="menu-col"><span class="mono-label">Elevator Range</span>' +
-            '<div class="menu-products">' + productLinks + '</div>' +
-          '</div>' +
-        '</div>' +
-      '</nav>';
-  }
-
-  function footerHTML() {
-    var productLinks = PRODUCTS.slice(0, 6).map(function (p) {
-      return '<li><a href="' + p[0] + '">' + p[1] + '</a></li>';
-    }).join('');
-    return '' +
-      '<footer class="site-footer">' +
-        '<div class="wrap">' +
-          '<div class="footer-grid">' +
-            '<div>' +
-              '<a class="brand" href="index.html"><img src="logo.png" alt="Kalyan Elevators"></a>' +
-              '<p style="margin-top:20px;font-size:13.5px;color:#6a6a6a;max-width:34ch">Bespoke vertical transportation systems, engineered for architectural harmony and whisper-quiet mobility.</p>' +
-            '</div>' +
-            '<div><h4>Quick Links</h4><ul>' +
-              '<li><a href="index.html">Home</a></li>' +
-              '<li><a href="about.html">About</a></li>' +
-              '<li><a href="gallery.html">Gallery</a></li>' +
-              '<li><a href="contact.html">Contact</a></li>' +
-              productLinks +
-            '</ul></div>' +
-            '<div><h4>Address</h4><ul>' +
-              '<li style="font-size:13.5px;color:#555;line-height:1.7"><strong>Head Office</strong><br>2nd Floor, Ruqia Chambers, Kovilvattam Junction, TD Road, Kochi, Kerala - 682035</li>' +
-              '<li style="margin-top:14px;font-size:13.5px;color:#555;line-height:1.7"><strong>Contact Number</strong><br><a href="tel:+917994998880">+91 79949 98880</a></li>' +
-              '<li style="margin-top:10px"><a href="mailto:info@kalyanelevators.in">info@kalyanelevators.in</a></li>' +
-            '</ul></div>' +
-            '<div><h4>Headquarters</h4>' +
-              '<div class="footer-map"><iframe title="Kalyan Elevators HQ" loading="lazy" src="https://www.google.com/maps?q=Kalyan+Elevators,Kochi,Kerala&output=embed"></iframe></div>' +
-            '</div>' +
-          '</div>' +
-          '<div class="footer-bottom">' +
-            '<span>© 2026 Kalyan Elevators. Engineered with precision.</span>' +
-            '<div class="socials">' +
-              '<a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>' +
-              '<a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>' +
-              '<a href="#" aria-label="X"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="display:block"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>' +
-              '<a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg></a>' +
-            '</div>' +
-          '</div>' +
-        '</div>' +
-      '</footer>' +
-      '<a class="whatsapp-fab" href="https://wa.me/917994998880" target="_blank" rel="noopener" aria-label="WhatsApp">' +
-        '<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style="display:block">' +
-          '<path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 001.333 4.993L2 22l5.177-1.355A9.95 9.95 0 0012.01 22c5.51 0 9.99-4.48 9.99-9.986C22 6.507 17.519 2.002 12.012 2zm0 18.294c-1.636 0-3.238-.429-4.646-1.243l-.333-.198-3.457.906.924-3.37-.217-.346a8.254 8.254 0 01-1.267-4.498c.001-4.563 3.717-8.274 8.284-8.274 4.56 0 8.271 3.712 8.273 8.277-.002 4.569-3.719 8.286-8.288 8.286zm4.543-6.196c-.249-.125-1.472-.725-1.7-.808-.228-.083-.393-.125-.558.125-.166.249-.641.808-.787.975-.145.166-.29.187-.539.062-.25-.125-1.05-.387-2.001-1.234-.74-.66-1.24-1.475-1.385-1.725-.145-.249-.015-.385.11-.51.112-.112.249-.29.373-.436.124-.146.166-.25.249-.415.083-.167.042-.312-.021-.437-.062-.125-.558-1.349-.764-1.848-.201-.484-.403-.418-.558-.426-.145-.007-.31-.009-.477-.009a.919.919 0 00-.663.312c-.228.249-.87.851-.87 2.076 0 1.226.892 2.41 1.016 2.577.125.166 1.758 2.685 4.258 3.764.595.257 1.06.41 1.423.525.597.19 1.141.163 1.572.099.48-.072 1.472-.601 1.679-1.183.207-.582.207-1.08.145-1.183-.063-.105-.228-.167-.478-.292z"/>' +
-        '</svg>' +
-      '</a>';
-  }
-
-  function injectLayout() {
-    var h = document.getElementById('site-header');
-    var f = document.getElementById('site-footer');
-    if (h) h.outerHTML = headerHTML();
-    if (f) f.outerHTML = footerHTML();
-  }
-
+  /* ---- header scroll state ---------------------------------- */
   function initHeader() {
     var header = document.getElementById('siteHeader');
     if (!header) return;
@@ -111,19 +29,78 @@
     onScroll();
   }
 
+  /* ---- mobile menu overlay ---------------------------------- */
   function initMenu() {
     var toggle = document.getElementById('menuToggle');
-    if (!toggle) return;
+    var overlay = document.getElementById('menuOverlay');
+    if (!toggle || !overlay) return;
+
+    var setState = function (open) {
+      document.body.classList.toggle('menu-open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      overlay.setAttribute('aria-hidden', open ? 'false' : 'true');
+    };
+
     toggle.addEventListener('click', function () {
-      document.body.classList.toggle('menu-open');
+      setState(!document.body.classList.contains('menu-open'));
     });
-    document.querySelectorAll('.menu-overlay a').forEach(function (a) {
-      a.addEventListener('click', function () {
-        document.body.classList.remove('menu-open');
+
+    overlay.addEventListener('click', function (e) {
+      if (e.target.closest('a')) setState(false);
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && document.body.classList.contains('menu-open')) {
+        setState(false);
+        toggle.focus();
+      }
+    });
+
+    setState(false);
+  }
+
+  /* ---- desktop Elevators dropdown ---------------------------
+     CSS opens it on hover. This adds click and keyboard access so
+     it also works on touch and without a mouse. */
+  function initNavDropdown() {
+    document.querySelectorAll('.nav-drop').forEach(function (drop) {
+      var trigger = drop.querySelector('.nav-drop-trigger');
+      if (!trigger) return;
+
+      var setOpen = function (open) {
+        drop.classList.toggle('is-open', open);
+        trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      };
+
+      trigger.addEventListener('click', function (e) {
+        e.preventDefault();
+        setOpen(!drop.classList.contains('is-open'));
       });
+
+      drop.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { setOpen(false); trigger.focus(); }
+      });
+
+      /* Close when focus or the pointer leaves the whole group. */
+      drop.addEventListener('focusout', function (e) {
+        if (!drop.contains(e.relatedTarget)) setOpen(false);
+      });
+      drop.addEventListener('mouseleave', function () { setOpen(false); });
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.nav-drop')) {
+        document.querySelectorAll('.nav-drop.is-open').forEach(function (d) {
+          d.classList.remove('is-open');
+          var t = d.querySelector('.nav-drop-trigger');
+          if (t) t.setAttribute('aria-expanded', 'false');
+        });
+      }
     });
   }
 
+  /* ---- line-by-line heading reveal -------------------------- */
   function initSplitLines() {
     document.querySelectorAll('.split-lines').forEach(function (el) {
       if (el.dataset.split) return;
@@ -135,9 +112,12 @@
     });
   }
 
+  /* ---- scroll reveals --------------------------------------- */
   function initReveals() {
     var els = document.querySelectorAll('.reveal, .img-reveal, .split-lines');
-    if (!('IntersectionObserver' in window)) {
+    if (!els.length) return;
+
+    if (reduceMotion || !('IntersectionObserver' in window)) {
       els.forEach(function (el) { el.classList.add('in'); });
       return;
     }
@@ -149,11 +129,10 @@
         }
       });
     }, { threshold: 0.15 });
-    els.forEach(function (el) {
-      io.observe(el);
-    });
-    /* Failsafe: if IO never fires for anything (broken in some environments),
-       reveal everything so content is never stuck hidden. */
+    els.forEach(function (el) { io.observe(el); });
+
+    /* Failsafe: if the observer never fires, show everything rather
+       than leaving content stuck hidden. */
     setTimeout(function () {
       if (!document.querySelector('.reveal.in, .img-reveal.in, .split-lines.in')) {
         io.disconnect();
@@ -162,57 +141,87 @@
     }, 900);
   }
 
+  /* ---- animated counters -----------------------------------
+     Reads [data-count] / [data-suffix]. Renders the final value
+     immediately when motion is reduced. */
   function initCounters() {
+    var els = document.querySelectorAll('[data-count]');
+    if (!els.length) return;
+
+    var render = function (el, value) {
+      el.firstChild.textContent = value.toLocaleString('en-IN');
+    };
+    var addSuffix = function (el) {
+      var suffix = el.dataset.suffix;
+      if (suffix && !el.querySelector('b')) {
+        var b = document.createElement('b');
+        b.textContent = suffix;
+        el.appendChild(b);
+      }
+    };
+
+    els.forEach(function (el) {
+      if (!el.firstChild) el.appendChild(document.createTextNode('0'));
+    });
+
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      els.forEach(function (el) {
+        render(el, parseInt(el.dataset.count, 10) || 0);
+        addSuffix(el);
+      });
+      return;
+    }
+
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (!e.isIntersecting) return;
         io.unobserve(e.target);
         var el = e.target;
         var target = parseInt(el.dataset.count, 10) || 0;
-        var suffix = el.dataset.suffix || '';
         var start = performance.now(), dur = 1800;
         (function tick(now) {
           var p = Math.min((now - start) / dur, 1);
           var eased = 1 - Math.pow(1 - p, 4);
-          el.firstChild.textContent = Math.round(target * eased).toLocaleString('en-IN');
+          render(el, Math.round(target * eased));
           if (p < 1) requestAnimationFrame(tick);
-          else el.firstChild.textContent = target.toLocaleString('en-IN');
+          else render(el, target);
         })(start);
-        if (suffix && !el.querySelector('b')) {
-          var b = document.createElement('b');
-          b.textContent = suffix;
-          el.appendChild(b);
-        }
+        addSuffix(el);
       });
     }, { threshold: 0.4 });
-    document.querySelectorAll('[data-count]').forEach(function (el) {
-      if (!el.firstChild) el.appendChild(document.createTextNode('0'));
-      io.observe(el);
-    });
+
+    els.forEach(function (el) { io.observe(el); });
   }
 
+  /* ---- FAQ accordions --------------------------------------- */
   function initAccordions() {
     document.querySelectorAll('.faq-item').forEach(function (item) {
       var q = item.querySelector('.faq-q');
       var a = item.querySelector('.faq-a');
       if (!q || !a || q.dataset.bound) return;
       q.dataset.bound = '1';
+      q.setAttribute('aria-expanded', 'false');
       q.addEventListener('click', function () {
         var open = item.classList.contains('open');
         var group = item.closest('.faq-group') || document;
         group.querySelectorAll('.faq-item.open').forEach(function (o) {
           o.classList.remove('open');
           o.querySelector('.faq-a').style.maxHeight = null;
+          var oq = o.querySelector('.faq-q');
+          if (oq) oq.setAttribute('aria-expanded', 'false');
         });
         if (!open) {
           item.classList.add('open');
           a.style.maxHeight = a.scrollHeight + 'px';
+          q.setAttribute('aria-expanded', 'true');
         }
       });
     });
   }
 
+  /* ---- parallax backgrounds --------------------------------- */
   function initParallax() {
+    if (reduceMotion) return;
     var els = document.querySelectorAll('[data-parallax]');
     if (!els.length) return;
     var onScroll = function () {
@@ -227,18 +236,22 @@
     onScroll();
   }
 
+  /* ---- horizontal carousels --------------------------------- */
   function initCarousels() {
     document.querySelectorAll('.carousel').forEach(function (c) {
       var track = c.querySelector('.carousel-track');
       var prev = c.querySelector('[data-prev]');
       var next = c.querySelector('[data-next]');
       if (!track) return;
-      var step = function () { return track.firstElementChild ? track.firstElementChild.offsetWidth + 20 : 300; };
+      var step = function () {
+        return track.firstElementChild ? track.firstElementChild.offsetWidth + 20 : 300;
+      };
       if (prev) prev.addEventListener('click', function () { track.scrollBy({ left: -step(), behavior: 'smooth' }); });
       if (next) next.addEventListener('click', function () { track.scrollBy({ left: step(), behavior: 'smooth' }); });
     });
   }
 
+  /* ---- floating labels on selects --------------------------- */
   function initFloatingSelects() {
     document.querySelectorAll('.field select').forEach(function (s) {
       var sync = function () {
@@ -249,62 +262,127 @@
     });
   }
 
+  /* ---- forms -----------------------------------------------
+     TODO: these are not yet wired to a destination. The hero bar
+     carries the chosen elevator type down to the consultation
+     form; the consultation forms themselves still need a real
+     endpoint before the site can capture an enquiry. */
   function initForms() {
     document.querySelectorAll('form[data-demo]').forEach(function (form) {
       form.addEventListener('submit', function (e) {
         e.preventDefault();
+
         if (form.classList.contains('lead-bar')) {
           var targetSelect = document.querySelector('.consult-form select');
           var sourceSelect = form.querySelector('select');
           if (targetSelect && sourceSelect) {
             targetSelect.value = sourceSelect.value;
-            var event = new Event('change');
-            targetSelect.dispatchEvent(event);
+            targetSelect.dispatchEvent(new Event('change'));
           }
           var target = document.getElementById('consult');
-          if (target) {
-            target.scrollIntoView({ behavior: 'smooth' });
-          }
+          if (target) target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
           return;
         }
+
         var btn = form.querySelector('.btn span');
         if (btn) btn.textContent = 'Request Received ✓';
       });
     });
   }
 
-  function initHeroVideoRotation() {
-    var d1 = document.getElementById('vid-desktop-1');
-    var d2 = document.getElementById('vid-desktop-2');
-    var m1 = document.getElementById('vid-mobile-1');
-    var m2 = document.getElementById('vid-mobile-2');
-    
-    function setupSequence(v1, v2) {
-      if (!v1 || !v2) return;
-      
-      v1.play().catch(function() {});
-      
-      v1.addEventListener('ended', function () {
-        v2.currentTime = 0;
-        v2.play().catch(function() {});
-        v2.classList.add('active');
-        v1.classList.remove('active');
+  /* ---- hero video ------------------------------------------
+     Sources live in data attributes and are injected for the
+     matching breakpoint only. Previously both the mobile and the
+     desktop pair were in the markup and hidden with display:none,
+     which hides a <video> but does not stop it downloading — so
+     every device pulled roughly 2 MB of video it never played.
+     With no JS the poster image stands in. */
+  function initHeroVideo() {
+    var videos = document.querySelectorAll('.hero-video[data-webm]');
+    if (!videos.length) return;
+
+    var wantMobile = window.matchMedia('(max-width: 900px)').matches;
+    var set = [];
+
+    videos.forEach(function (v) {
+      var isMobile = v.classList.contains('hero-video-mobile');
+      if (isMobile !== wantMobile) return;
+
+      ['webm', 'mp4'].forEach(function (type) {
+        var src = v.dataset[type];
+        if (!src) return;
+        var s = document.createElement('source');
+        s.src = src;
+        s.type = 'video/' + type;
+        v.appendChild(s);
       });
-      
-      v2.addEventListener('ended', function () {
-        v1.currentTime = 0;
-        v1.play().catch(function() {});
-        v1.classList.add('active');
-        v2.classList.remove('active');
-      });
+      v.load();
+      set.push(v);
+    });
+
+    if (!set.length) return;
+
+    /* Single clip: just loop it. */
+    if (set.length === 1) {
+      set[0].loop = true;
+      set[0].classList.add('active');
+      set[0].play().catch(function () {});
+      return;
     }
-    
-    setupSequence(d1, d2);
-    setupSequence(m1, m2);
+
+    /* Two clips: alternate, crossfading via the .active class. */
+    set.forEach(function (v, i) {
+      v.addEventListener('ended', function () {
+        var next = set[(i + 1) % set.length];
+        next.currentTime = 0;
+        next.classList.add('active');
+        v.classList.remove('active');
+        next.play().catch(function () {});
+      });
+    });
+    set[0].classList.add('active');
+    set[0].play().catch(function () {});
   }
 
+  /* ---- below-the-fold decorative video ---------------------
+     autoplay overrides preload="none", so a video that is never
+     scrolled to still downloads in full. Hold its sources back
+     until it approaches the viewport. Without JS the poster shows. */
+  function initLazyVideo() {
+    var videos = document.querySelectorAll('video[data-lazy-src]');
+    if (!videos.length) return;
+
+    var load = function (v) {
+      if (v.dataset.loaded) return;
+      v.dataset.loaded = '1';
+      v.dataset.lazySrc.split(',').forEach(function (src) {
+        src = src.trim();
+        if (!src) return;
+        var s = document.createElement('source');
+        s.src = src;
+        s.type = 'video/' + src.split('.').pop();
+        v.appendChild(s);
+      });
+      v.load();
+      v.play().catch(function () {});
+    };
+
+    if (!('IntersectionObserver' in window)) {
+      videos.forEach(load);
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        io.unobserve(e.target);
+        load(e.target);
+      });
+    }, { rootMargin: '400px 0px' });
+    videos.forEach(function (v) { io.observe(v); });
+  }
+
+  /* ---- init ------------------------------------------------- */
   window.KE = {
-    products: PRODUCTS,
     initAll: function () {
       initSplitLines();
       initReveals();
@@ -314,29 +392,22 @@
       initCarousels();
       initFloatingSelects();
       initForms();
-      initHeroVideoRotation();
+      initHeroVideo();
+      initLazyVideo();
     }
   };
 
   document.addEventListener('DOMContentLoaded', function () {
-    injectLayout();
     initHeader();
     initMenu();
+    initNavDropdown();
     window.KE.initAll();
-    setTimeout(function () {
-      document.body.classList.add('loaded');
-    }, 50);
 
-    /* ---- Service Worker registration ---- */
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/sw.js', { scope: '/' })
-          .then(function (reg) {
-            console.log('[SW] Registered, scope:', reg.scope);
-          })
-          .catch(function (err) {
-            console.warn('[SW] Registration failed:', err);
-          });
+        navigator.serviceWorker.register('sw.js').catch(function (err) {
+          console.warn('[SW] Registration failed:', err);
+        });
       });
     }
   });

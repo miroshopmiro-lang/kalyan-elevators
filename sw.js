@@ -1,126 +1,113 @@
 /* ============================================================
    KALYAN ELEVATORS — Service Worker
+   ------------------------------------------------------------
    Strategy:
-     - HTML pages:       Network-first  (always fresh content, fallback to cache)
-     - CSS / JS:         Stale-while-revalidate (instant load, background refresh)
-     - Images / WebP:    Cache-first    (long-lived, re-fetch on cache-bust)
-     - Videos (mp4/webm): No caching   (too large; streamed natively)
-     - External URLs:    Network-only   (CDN / maps / fonts served fresh)
+     HTML pages      Network-first, cache fallback
+     CSS / JS        Network-first, cache fallback
+     Images          Cache-first, network fill
+     Videos          Not handled (range requests, too large)
+     Cross-origin    Not handled
 
-   Cache Busting:
-     Bump CACHE_VERSION whenever static assets change.
-     The activate event auto-deletes all old versioned caches.
+   CSS and JS used to be stale-while-revalidate, which returns the
+   cached copy immediately and refreshes in the background — so a
+   returning device always rendered the previous visit's scripts.
+   Combined with a precache list that still pointed at older asset
+   versions and a CACHE_VERSION that was never bumped (so the purge
+   on activate never ran), a phone could be served a broken mix of
+   new HTML and old JS. These files are ~55 KB together; correctness
+   is worth more than the few milliseconds.
+
+   Every strategy now has a rejection path. Previously only the HTML
+   one did, so a dropped request for CSS or JS on a weak mobile
+   signal produced a hard asset failure instead of a fallback.
+
+   IMPORTANT: bump CACHE_VERSION whenever the asset query strings in
+   build/build-pages.js change.
    ============================================================ */
 
-const CACHE_VERSION = 'v1.1.0';
+const CACHE_VERSION = 'v1.2.0';
 const STATIC_CACHE = `kalyan-static-${CACHE_VERSION}`;
 const PAGES_CACHE = `kalyan-pages-${CACHE_VERSION}`;
 
-/* ---- Assets to pre-cache on install ---- */
-const PRECACHE_ASSETS = [
-  /* Core UI */
-  '/',
-  '/index.html',
-  '/about.html',
-  '/gallery.html',
-  '/contact.html',
-  '/passenger-elevators.html',
-  '/home-elevators.html',
-  '/glass-elevators.html',
-  '/capsule-elevators.html',
-  '/commercial-elevators.html',
-  '/hospital-elevators.html',
-  '/car-elevators.html',
-  '/freight-elevators.html',
-  '/structural-elevators.html',
-  '/css/style.css?v=1.0.6',
-  '/js/main.js?v=1.0.4',
-  '/favicon.png',
-  '/logo.png',
-  '/core-tech-bg.webp',
+/* Must match CSS_V / JS_V in build/build-pages.js. */
+const ASSET_V = '1.1.0';
 
-  /* Gallery images (small WebP, safe to precache) */
-  '/gallery/gallery-1.webp',
-  '/gallery/gallery-2.webp',
-  '/gallery/gallery-3.webp',
-  '/gallery/gallery-4.webp',
-  '/gallery/gallery-5.webp',
-
-  /* Product images */
-  '/images/about-hero.webp',
-  '/images/home-residence-card.webp',
-  '/images/home-commercial-card.webp',
-  '/images/home-capsule-card.webp',
-  '/images/passenger-hero.webp',
-  '/images/passenger-cta.webp',
-  '/images/passenger-gallery-1.webp',
-  '/images/passenger-gallery-2.webp',
-  '/images/passenger-gallery-3.webp',
-  '/images/home-elevator-hero.webp',
-  '/images/home-elevator-cta.webp',
-  '/images/home-elevator-gallery-2.webp',
-  '/images/glass-hero.webp',
-  '/images/glass-cta.webp',
-  '/images/glass-gallery-1.webp',
-  '/images/glass-gallery-2.webp',
-  '/images/glass-gallery-3.webp',
-  '/images/capsule-hero.webp',
-  '/images/capsule-cta.webp',
-  '/images/capsule-gallery-1.webp',
-  '/images/capsule-gallery-2.webp',
-  '/images/capsule-gallery-3.webp',
-  '/images/commercial-hero.webp',
-  '/images/commercial-cta.webp',
-  '/images/commercial-gallery-1.webp',
-  '/images/commercial-gallery-2.webp',
-  '/images/commercial-gallery-3.webp',
-  '/images/hospital-hero.webp',
-  '/images/hospital-cta.webp',
-  '/images/hospital-gallery-1.webp',
-  '/images/hospital-gallery-2.webp',
-  '/images/hospital-gallery-3.webp',
-  '/images/car-hero.webp',
-  '/images/car-cta.webp',
-  '/images/car-gallery-1.webp',
-  '/images/car-gallery-2.webp',
-  '/images/car-gallery-3.webp',
-  '/images/freight-hero.webp',
-  '/images/freight-cta.webp',
-  '/images/freight-gallery-1.webp',
-  '/images/freight-gallery-2.webp',
-  '/images/freight-gallery-3.webp',
-  '/images/structural-hero.webp',
-  '/images/structural-cta.webp',
-  '/images/structural-gallery-1.webp',
-  '/images/structural-gallery-2.webp',
-  '/images/structural-gallery-3.webp',
-  '/images/contact-hero.webp',
+const PAGES = [
+  './',
+  'index.html',
+  'about.html',
+  'elevators.html',
+  'gallery.html',
+  'contact.html',
+  'passenger-elevators.html',
+  'home-elevators.html',
+  'glass-elevators.html',
+  'capsule-elevators.html',
+  'commercial-elevators.html',
+  'hospital-elevators.html',
+  'car-elevators.html',
+  'freight-elevators.html',
+  'structural-elevators.html'
 ];
 
+const CORE = [
+  `css/style.css?v=${ASSET_V}`,
+  `js/main.js?v=${ASSET_V}`,
+  'favicon.png',
+  'logo.png',
+  'core-tech-bg.webp'
+];
+
+/* Product hero images double as the thumbnails in the nav dropdown,
+   the mobile menu and the cross-link strips, so they are worth
+   having offline. */
+const IMAGES = [
+  'images/passenger-hero.webp',
+  'images/home-elevator-hero.webp',
+  'images/glass-hero.webp',
+  'images/capsule-hero.webp',
+  'images/commercial-hero.webp',
+  'images/hospital-hero.webp',
+  'images/car-hero.webp',
+  'images/freight-hero.webp',
+  'images/structural-hero.webp',
+  'images/about-hero.webp',
+  'images/contact-hero.webp',
+  'gallery/gallery-1.webp',
+  'gallery/gallery-3.webp',
+  'gallery/gallery-4.webp'
+];
+
+const PRECACHE = PAGES.concat(CORE, IMAGES);
+
 /* ------------------------------------------------------------ */
-/* INSTALL — Precache static shell                               */
+/* INSTALL                                                      */
 /* ------------------------------------------------------------ */
 self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(STATIC_CACHE).then(function (cache) {
-      return cache.addAll(PRECACHE_ASSETS);
+      /* Add individually so one 404 cannot abort the whole install,
+         which is what cache.addAll() does. */
+      return Promise.all(PRECACHE.map(function (url) {
+        return cache.add(new Request(url, { cache: 'reload' })).catch(function () {
+          console.warn('[SW] Skipped precache:', url);
+        });
+      }));
     }).then(function () {
-      /* Skip the waiting phase so the new SW activates immediately */
       return self.skipWaiting();
     })
   );
 });
 
 /* ------------------------------------------------------------ */
-/* ACTIVATE — Delete stale caches from old CACHE_VERSIONs       */
+/* ACTIVATE — drop caches from previous versions                 */
 /* ------------------------------------------------------------ */
 self.addEventListener('activate', function (event) {
   event.waitUntil(
-    caches.keys().then(function (cacheNames) {
+    caches.keys().then(function (names) {
       return Promise.all(
-        cacheNames
+        names
           .filter(function (name) {
-            /* Delete any Kalyan cache that does NOT match current version */
             return name.startsWith('kalyan-') && !name.endsWith(CACHE_VERSION);
           })
           .map(function (name) {
@@ -129,103 +116,103 @@ self.addEventListener('activate', function (event) {
           })
       );
     }).then(function () {
-      /* Immediately take control of all open pages */
       return self.clients.claim();
     })
   );
 });
 
 /* ------------------------------------------------------------ */
-/* FETCH — Route requests to the correct caching strategy       */
+/* FETCH                                                        */
 /* ------------------------------------------------------------ */
 self.addEventListener('fetch', function (event) {
-  var req = event.request;
-  var url = new URL(req.url);
+  const req = event.request;
 
-  /* Only handle same-origin GETs */
-  if (req.method !== 'GET' || url.origin !== self.location.origin) {
-    return; /* Let the browser handle everything else normally */
+  if (req.method !== 'GET') return;
+
+  let url;
+  try {
+    url = new URL(req.url);
+  } catch (e) {
+    return;
   }
+  if (url.origin !== self.location.origin) return;
 
-  var path = url.pathname;
+  const path = url.pathname;
 
-  /* ---- Skip videos entirely (range requests, too large) ---- */
-  if (/\.(mp4|webm)$/i.test(path)) {
+  /* Videos stream natively and use range requests. */
+  if (/\.(mp4|webm)$/i.test(path)) return;
+
+  const accept = req.headers.get('accept') || '';
+
+  if (accept.includes('text/html')) {
+    event.respondWith(networkFirst(req, PAGES_CACHE, true));
     return;
   }
 
-  /* ---- HTML pages: Network-first ---- */
-  if (req.headers.get('accept') && req.headers.get('accept').includes('text/html')) {
-    event.respondWith(networkFirstHtml(req));
-    return;
-  }
-
-  /* ---- CSS / JS: Stale-while-revalidate ---- */
   if (/\.(css|js)$/i.test(path)) {
-    event.respondWith(staleWhileRevalidate(req, STATIC_CACHE));
+    event.respondWith(networkFirst(req, STATIC_CACHE, false));
     return;
   }
 
-  /* ---- Images / WebP / PNG / fonts: Cache-first ---- */
   if (/\.(webp|png|jpg|jpeg|gif|svg|woff2?|ttf|otf|ico)$/i.test(path)) {
     event.respondWith(cacheFirst(req, STATIC_CACHE));
     return;
   }
 
-  /* ---- Everything else: Network-first ---- */
-  event.respondWith(networkFirstHtml(req));
+  event.respondWith(networkFirst(req, PAGES_CACHE, false));
 });
 
 /* ------------------------------------------------------------ */
-/* Strategy helpers                                             */
+/* Strategies — each resolves to a Response in every path        */
 /* ------------------------------------------------------------ */
 
-/** Network-first: try network, store in pages cache, fall back to cache */
-function networkFirstHtml(req) {
-  return fetch(req).then(function (networkRes) {
-    if (networkRes && networkRes.ok) {
-      var clone = networkRes.clone();
-      caches.open(PAGES_CACHE).then(function (cache) {
+/** Network-first. Falls back to cache, then (for navigations) to the
+ *  cached home page, then to a plain offline response. */
+function networkFirst(req, cacheName, isNavigation) {
+  return fetch(req).then(function (res) {
+    if (res && res.ok) {
+      const clone = res.clone();
+      caches.open(cacheName).then(function (cache) {
         cache.put(req, clone);
-      });
+      }).catch(function () { /* cache full or unavailable — serve anyway */ });
     }
-    return networkRes;
+    return res;
   }).catch(function () {
     return caches.match(req).then(function (cached) {
-      return cached || caches.match('/index.html');
-    });
-  });
-}
-
-/** Cache-first: serve from cache immediately, populate on miss */
-function cacheFirst(req, cacheName) {
-  return caches.open(cacheName).then(function (cache) {
-    return cache.match(req).then(function (cached) {
       if (cached) return cached;
-
-      return fetch(req).then(function (networkRes) {
-        if (networkRes && networkRes.ok) {
-          cache.put(req, networkRes.clone());
-        }
-        return networkRes;
-      });
+      if (isNavigation) {
+        return caches.match('index.html').then(function (home) {
+          return home || offlineResponse();
+        });
+      }
+      return offlineResponse();
     });
   });
 }
 
-/** Stale-while-revalidate: respond from cache instantly, refresh in background */
-function staleWhileRevalidate(req, cacheName) {
-  return caches.open(cacheName).then(function (cache) {
-    return cache.match(req).then(function (cached) {
-      var networkFetch = fetch(req).then(function (networkRes) {
-        if (networkRes && networkRes.ok) {
-          cache.put(req, networkRes.clone());
-        }
-        return networkRes;
-      });
+/** Cache-first, filling the cache on a miss. */
+function cacheFirst(req, cacheName) {
+  return caches.match(req).then(function (cached) {
+    if (cached) return cached;
 
-      /* Return cached immediately if available, otherwise wait for network */
-      return cached || networkFetch;
+    return fetch(req).then(function (res) {
+      if (res && res.ok) {
+        const clone = res.clone();
+        caches.open(cacheName).then(function (cache) {
+          cache.put(req, clone);
+        }).catch(function () {});
+      }
+      return res;
+    }).catch(function () {
+      return offlineResponse();
     });
+  });
+}
+
+function offlineResponse() {
+  return new Response('', {
+    status: 503,
+    statusText: 'Offline',
+    headers: { 'Content-Type': 'text/plain' }
   });
 }
