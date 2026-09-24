@@ -1,0 +1,27 @@
+User-agent: *
+Allow: /
+
+# Answer engines are allowed on purpose: people ask assistants "home lift price in
+# Kerala" now, and being quotable there is part of being found. See /llms.txt.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://kalyanelevators.in/sitemap-index.xml

@@ -1,0 +1,29 @@
+# Old v1 URLs (live since July 2026) to their v3 pages. 301 so search engines move
+# any ranking across. Both the .html and the extensionless form, because Cloudflare
+# Pages served v1 under both.
+/about.html                /about                   301
+/contact.html              /contact                 301
+/gallery.html              /projects                301
+/gallery                   /projects                301
+/elevators.html            /lifts                   301
+/elevators                 /lifts                   301
+/home-elevators.html       /home-lift-kerala        301
+/home-elevators            /home-lift-kerala        301
+/passenger-elevators.html  /passenger-lift-kerala   301
+/passenger-elevators       /passenger-lift-kerala   301
+/commercial-elevators.html /commercial-lift-kerala  301
+/commercial-elevators      /commercial-lift-kerala  301
+/hospital-elevators.html   /hospital-lift-kerala    301
+/hospital-elevators        /hospital-lift-kerala    301
+/capsule-elevators.html    /capsule-lift-kerala     301
+/capsule-elevators         /capsule-lift-kerala     301
+/glass-elevators.html      /capsule-lift-kerala     301
+/glass-elevators           /capsule-lift-kerala     301
+/car-elevators.html        /lifts                   301
+/car-elevators             /lifts                   301
+/freight-elevators.html    /lifts                   301
+/freight-elevators         /lifts                   301
+/structural-elevators.html /lifts                   301
+/structural-elevators      /lifts                   301
+/designs                   /home-lift-kerala        301
+/designs/                  /home-lift-kerala        301
