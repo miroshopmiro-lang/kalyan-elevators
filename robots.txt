@@ -24,4 +24,4 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://kalyanelevators.in/sitemap-index.xml
+Sitemap: https://kalyanelevators.com/sitemap-index.xml
